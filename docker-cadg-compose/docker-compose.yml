@@ -17,7 +17,7 @@ services:
                 build: ../cadg-db
                 networks:
                         - cadgnet
-                command: mysql -p="example" < create_cadg_db.sql
+                command: mysql -p=example < create_cadg_db.sql
                 environment:
                         MYSQL_ROOT_PASSWORD: example
 networks:
