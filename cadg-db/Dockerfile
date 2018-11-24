@@ -2,6 +2,8 @@
 
 FROM mysql
 
+ENV NAME MYSQL_ROOT_PASSWORD=example
+
 COPY *.sql .
 
 RUN --default-authentication-plugin=mysql_native_password
