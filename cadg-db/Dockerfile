@@ -2,7 +2,7 @@
 
 FROM mysql
 
-ENV MYSQL_ROOT_PASSWORD=example
+ENV MYSQL_ROOT_PASSWORD="example"
 
 COPY *.sql .
 
