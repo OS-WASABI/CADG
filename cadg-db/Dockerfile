@@ -3,5 +3,3 @@
 FROM mysql
 
 COPY *.sql .
-
-RUN --default-authentication-plugin=example
