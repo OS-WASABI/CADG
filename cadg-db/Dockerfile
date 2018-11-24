@@ -4,4 +4,4 @@ FROM mysql
 
 COPY *.sql .
 
-RUN --default-authentication-plugin=example
+RUN --default-authentication-plugin=mysql_native_password
