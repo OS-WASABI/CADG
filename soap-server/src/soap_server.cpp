@@ -11,14 +11,26 @@
 #include <string>
 #include "log_level.hpp"
 #include "logger.hpp"
-#include "gSOAPFiles/soapCAPSoapHTTPService.h"
+#include "gSOAPFiles/soapCAPSoapHttpService.h"
 #include "gSOAPFiles/soapStub.h"
 #include "gSOAPFiles/soapH.h"
 #include "gSOAPFiles/stdsoap2.h"
 #include "gSOAPFiles/CAPSoapHttp.nsmap"
+#include "gSOAPFiles/plugin/threads.h"
 using cadg_soap::LoggerInterface;
 using cadg_soap::LogLevel;
 using cadg_soap::Logger;
+
+void *process_request(void *arg) {
+    CAPSoapHttpService *service = (CAPSoapHttpService*) arg;
+    THREAD_DETACH(THREAD_ID);
+    if (service) {
+        service->serve();
+        service->destroy();
+        delete service;
+    }
+    return NULL;
+}
 
 int main(int argc, const char * argv[]) {
     int port = 8000;
@@ -28,13 +40,21 @@ int main(int argc, const char * argv[]) {
     LoggerInterface& logger(Logger::Instance());
     logger.LogLevel(LogLevel::DEBUG);
     struct soap soap;
-    CAPSoapHttpService service(&soap);
-
-    service.soap->send_timeout = service.soap->recv_timeout = 5; // 5 sec socket idle timeout
-    service.soap->transfer_timeout = 30;                         // 30 sec message transfer timeout
-    while (service.run(port))
-        service.soap_stream_fault(std::cerr);
+    CAPSoapHttpService service(SOAP_IO_KEEPALIVE);
+    service.soap->accept_timeout = 24*60*60;
+    service.soap->send_timeout = service.soap->recv_timeout = 5;
+    SOAP_SOCKET sock = service.bind(NULL, port, 100);
+    if (soap_valid_socket(sock)) {
+        while (soap_valid_socket(service.accept())) {
+            THREAD_TYPE tid;
+            void *arg = (void*)service.copy();
+            if (!arg) { soap_closesock(&soap); }
+            else { while (THREAD_CREATE(&tid, (void*(*)(void*)) process_request, arg));}
+        }
+    }
+    service.soap_stream_fault(std::cerr);
     service.destroy();
+
     return 0;
 
 }
