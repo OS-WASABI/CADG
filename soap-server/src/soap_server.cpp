@@ -17,6 +17,7 @@
 #include "gSOAPFiles/stdsoap2.h"
 #include "gSOAPFiles/CAPSoapHttp.nsmap"
 #include "gSOAPFiles/plugin/threads.h"
+#include "services/cap_validation.hpp"
 using cadg_soap::LoggerInterface;
 using cadg_soap::LogLevel;
 using cadg_soap::Logger;
@@ -67,12 +68,13 @@ int CAPSoapHttpService::getRequest(ns2__requestParameterList *ns1__getRequestTyp
 int CAPSoapHttpService::postCAP(_ns1__postCAPRequestTypeDef *request,
                                 _ns1__postCAPResponseTypeDef &response) {
     auto responseCode = SOAP_OK;
-    auto alert = request->ns4__alert;
+    auto const alert = request->ns4__alert;
     LoggerInterface& logger(Logger::Instance());
     logger.Log(LogLevel::INFO, alert->sender, "CAPSoapHttpService", "postCAP");
-    if (alert->sender == "") {
-        responseCode = SOAP_TAG_MISMATCH;
+    if (!cap_validation::validate_soap_alert(*alert)) {
+        responseCode = SOAP_MIME_ERROR;
     }
+
     return responseCode;
 }
 
