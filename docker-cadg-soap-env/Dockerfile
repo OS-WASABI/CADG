@@ -16,6 +16,7 @@ RUN apt-get -qq -y install \
     g++-8 \
     libspdlog-dev \
     software-properties-common \
+    unixodbc-dev \
     wget \
     doxygen
 
