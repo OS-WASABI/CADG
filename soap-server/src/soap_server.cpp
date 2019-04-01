@@ -3,7 +3,7 @@
  *
  * Copyright 2018   Vaniya Agrawal, Ross Arcemont, Kristofer Hoadley, Shawn Hulce, Michael McCulley
  *
- * @file        rest_server.cpp
+ * @file        soap_server.cpp
  * @authors     Shawn Hulce
  * @date        March 2019
  */
@@ -17,9 +17,15 @@
 #include "gSOAPFiles/stdsoap2.h"
 #include "gSOAPFiles/CAPSoapHttp.nsmap"
 #include "gSOAPFiles/plugin/threads.h"
+#include "alert_dao_interface.hpp"
+#include "alert_dao.hpp"
+#include "model/alert.hpp"
 using cadg_soap::LoggerInterface;
 using cadg_soap::LogLevel;
 using cadg_soap::Logger;
+using cadg_soap::AlertDaoInterface;
+using cadg_soap::AlertDao;
+using cadg_soap::Alert;
 
 void *process_request(void *arg) {
     CAPSoapHttpService *service = (CAPSoapHttpService*) arg;
@@ -66,8 +72,12 @@ int CAPSoapHttpService::getRequest(ns2__requestParameterList *ns1__getRequestTyp
 
 int CAPSoapHttpService::postCAP(_ns1__postCAPRequestTypeDef *request,
                                 _ns1__postCAPResponseTypeDef &response) {
+    AlertDao& __dao = AlertDao::Instance();
     auto responseCode = SOAP_OK;
     auto alert = request->ns4__alert;
+    //Trying to convert to Alert struct to input data to Database
+    auto alertStruct = Alert::from_ns4__alert(*alert);
+    __dao.AddAlert(alertStruct);
     LoggerInterface& logger(Logger::Instance());
     logger.Log(LogLevel::INFO, alert->sender, "CAPSoapHttpService", "postCAP");
     if (alert->sender == "") {
