@@ -17,7 +17,7 @@
 #include "alert_dao_interface.hpp"
 #include "logger.hpp"
 #include "log_level.hpp"
-#include "model/alert.hpp"
+#include "../model/alert.hpp"
 
 namespace cadg_soap {
     /// A data access object for alerts.

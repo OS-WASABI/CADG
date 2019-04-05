@@ -4,6 +4,7 @@ project(soap_server)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(spdlog CONFIG REQUIRED)
+find_package(jsoncpp REQUIRED)
 
 add_executable(soap_server
         src/soap_server.cpp
@@ -22,6 +23,7 @@ set(SOAP_PLUGIN_HEADERS "src/gSOAPFiles/plugin")
 
 set(HEADER_PATHS ${MODEL_HEADERS} ${SERVICE_HEADERS} ${SOAP_HEADERS} ${SOAP_PLUGIN_HEADERS})
 
+set(JSONCPP_LIBRARY -ljsoncpp)
 set(SPDLOG_LIBRARY spdlog::spdlog)
 set(PTHREAD_LIBRARY -lpthread)
 set(LIBRARY_SEARCH_PATHS ${SPDLOG_LIBRARY} ${PTHREAD_LIBRARY})

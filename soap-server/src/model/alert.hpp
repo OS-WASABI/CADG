@@ -18,11 +18,12 @@
 #include <ctime>
 #include <sstream>
 #include <string>
-#include <cpprest/json.h>
+#include <jsoncpp/json/json.h>
 #include <iomanip>
 #include "soapH.h"
 
 namespace cadg_soap {
+
     /// An alert struct.
     /**
      * An alert struct that contains the most important
@@ -156,5 +157,9 @@ namespace cadg_soap {
                 a.severity == b.severity &&
                 a.sent_time == b.sent_time;
     }
+<<<<<<< Updated upstream
 }  // namespace cadg_soap
+=======
+}
+>>>>>>> Stashed changes
 #endif //CADG_REST_SERVER_ALERT_HPP

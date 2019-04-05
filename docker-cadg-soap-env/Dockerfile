@@ -14,6 +14,7 @@ RUN apt-get -qq -y install \
     cmake \
     cppcheck \
     g++-8 \
+    libjsoncpp-dev \
     libspdlog-dev \
     software-properties-common \
     unixodbc-dev \
