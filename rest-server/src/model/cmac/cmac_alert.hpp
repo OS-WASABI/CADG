@@ -22,7 +22,6 @@ namespace cmac {
         std::optional<std::string> cmac_message_type;
         std::optional<std::vector<std::string>> cmac_response_code;
         std::optional<std::vector<std::string>> cmac_note;
-        // TODO(Ross): Determine how to obtain from the gateway.
         std::optional<std::string> cmac_cap_alert_uri;
         std::optional<std::string> cmac_cap_identifier;
         std::optional<std::string> cmac_cap_sent_date_time;
@@ -47,8 +46,20 @@ namespace cmac {
         new_alert.cmac_message_number = soap_input.identifier; // Likely temporary value
         new_alert.cmac_referenced_message_number = soap_input.identifier; // Likely temporary value
         new_alert.cmac_referenced_message_cap_identifier = soap_input.identifier; // Maybe temporary value?
-        // TODO(Ross): Determine value
+        // TODO(Ross): Determine values
         new_alert.cmac_special_handling = "Temp value";
+        new_alert.cmac_sender = soap_input.sender;
+        new_alert.cmac_sent_date_time = soap_input.sent;
+        new_alert.cmac_status = soap_input.status;
+        new_alert.cmac_message_type = soap_input.msgType;
+        new_alert.cmac_response_code = soap_input.code;
+        new_alert.cmac_note = soap_input.note;
+        // TODO(Ross): Determine how to obtain from the gateway.
+        new_alert.cmac_cap_alert_uri = soap_input.source; // Likely temporary value
+        new_alert.cmac_cap_identifier = soap_input.identifier; // Maybe temporary value;
+        new_alert.cmac_cap_sent_date_time = soap_input.sent;
+        // TODO(Ross): Create data fill function in cmac_alert_info
+        new_alert.cmac_digital_signature = "Temp value";
     }
 }
 
