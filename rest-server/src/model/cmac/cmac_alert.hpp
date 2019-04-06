@@ -37,30 +37,30 @@ namespace cmac {
     // Finally, this method should make calls to similar methods found in the cmac_alert_info,
     // cmac_alert_area, cmac_alert_text hpp files as necessary in order to complete the cmac_alert object.
     // Those methods currently do not exist.
-    void fillAlertObject(_ns4__alert soap_input, cmac::CMAC_alert new_alert) {
-        // TODO(Ross): Determine how to get the protocol version based on either CAP message or other source.
-        new_alert.cmac_protocol_version = "Temp value";
-        // TODO(Ross): Determine how to get gateway IP or URI.
-        new_alert.cmac_sending_gateway_id = "Temp value";
-        // TODO(Ross): Determine how to identify CMSP-initiated value, when applicable.
-        new_alert.cmac_message_number = soap_input.identifier; // Likely temporary value
-        new_alert.cmac_referenced_message_number = soap_input.identifier; // Likely temporary value
-        new_alert.cmac_referenced_message_cap_identifier = soap_input.identifier; // Maybe temporary value?
-        // TODO(Ross): Determine values
-        new_alert.cmac_special_handling = "Temp value";
-        new_alert.cmac_sender = soap_input.sender;
-        new_alert.cmac_sent_date_time = soap_input.sent;
-        new_alert.cmac_status = soap_input.status;
-        new_alert.cmac_message_type = soap_input.msgType;
-        new_alert.cmac_response_code = soap_input.code;
-        new_alert.cmac_note = soap_input.note;
-        // TODO(Ross): Determine how to obtain from the gateway.
-        new_alert.cmac_cap_alert_uri = soap_input.source; // Likely temporary value
-        new_alert.cmac_cap_identifier = soap_input.identifier; // Maybe temporary value;
-        new_alert.cmac_cap_sent_date_time = soap_input.sent;
-        // TODO(Ross): Create data fill function in cmac_alert_info
-        new_alert.cmac_digital_signature = "Temp value";
-    }
+//    void fillAlertObject(_ns4__alert soap_input, cmac::CMAC_alert new_alert) {
+//        // TODO(Ross): Determine how to get the protocol version based on either CAP message or other source.
+//        new_alert.cmac_protocol_version = "Temp value";
+//        // TODO(Ross): Determine how to get gateway IP or URI.
+//        new_alert.cmac_sending_gateway_id = "Temp value";
+//        // TODO(Ross): Determine how to identify CMSP-initiated value, when applicable.
+//        new_alert.cmac_message_number = soap_input.identifier; // Likely temporary value
+//        new_alert.cmac_referenced_message_number = soap_input.identifier; // Likely temporary value
+//        new_alert.cmac_referenced_message_cap_identifier = soap_input.identifier; // Maybe temporary value?
+//        // TODO(Ross): Determine values
+//        new_alert.cmac_special_handling = "Temp value";
+//        new_alert.cmac_sender = soap_input.sender;
+//        new_alert.cmac_sent_date_time = soap_input.sent;
+//        new_alert.cmac_status = soap_input.status;
+//        new_alert.cmac_message_type = soap_input.msgType;
+//        new_alert.cmac_response_code = soap_input.code;
+//        new_alert.cmac_note = soap_input.note;
+//        // TODO(Ross): Determine how to obtain from the gateway.
+//        new_alert.cmac_cap_alert_uri = soap_input.source; // Likely temporary value
+//        new_alert.cmac_cap_identifier = soap_input.identifier; // Maybe temporary value;
+//        new_alert.cmac_cap_sent_date_time = soap_input.sent;
+//        // TODO(Ross): Create data fill function in cmac_alert_info
+//        new_alert.cmac_digital_signature = "Temp value";
+//    }
 }
 
 #endif //CADG_REST_SERVER_CMAC_ALERT_HPP
