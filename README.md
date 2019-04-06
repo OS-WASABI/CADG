@@ -44,8 +44,8 @@ make
 ## Credits
 Dev | Name
 -------|------
-![Vaniya Agrawal](/img/vaniya.png){:height="200px" width="200px"} | [Vaniya Agrawal](https://github.com/vsagrawal0)
-![Ross Arcemont](/img/ross.png){:height="200px" width="200px"} | [Ross Arcemont](https://github.com/SilverStar07)
-![Kristofer Hoadley](/img/kris.png){:height="200px" width="200px"} | [Kristofer Hoadley](https://github.com/kchoadley)
-![Shawn Hulce](/img/shawn.jpg){:height="200px" width="200px"} | [Shawn Hulce](https://github.com/SHulce)
-![Mike McCulley](/img/mike.png){:height="200px" width="200px"} | [Mike McCulley](https://github.com/ASUMike)
+<img src="./img/vaniya.png" width="200" height="200"> | [Vaniya Agrawal](https://github.com/vsagrawal0)
+<img src="./img/ross.png" width="200" height="200"> | [Ross Arcemont](https://github.com/SilverStar07)
+<img src="./img/kris.png" width="200" height="200"> | [Kristofer Hoadley](https://github.com/kchoadley)
+<img src="./img/shawn.jpg" width="200" height="200"> | [Shawn Hulce](https://github.com/SHulce)
+<img src="./img/mike.png" width="200" height="200"> | [Mike McCulley](https://github.com/ASUMike)
