@@ -46,18 +46,18 @@ namespace cadg_soap {
          * Converts an struct to a json object.
          * @return The JSON representation of an alert.
          */
-        web::json::value to_json() {
-            auto alert_json = web::json::value::object();
-            alert_json["alert_id"] = web::json::value::number(alert_id);
-            alert_json["identifier"] = web::json::value::string(identifier);
-            alert_json["originator_id"] = web::json::value::number(originator_id);
-            alert_json["message_type"] = web::json::value::string(message_type);
-            alert_json["scope"] = web::json::value::string(scope);
-            alert_json["status"] = web::json::value::string(status);
-            alert_json["urgency"] = web::json::value::string(urgency);
-            alert_json["severity"] = web::json::value::string(severity);
-            alert_json["cap_xml"] = web::json::value::string(cap_xml);
-            alert_json["sent_time"] = web::json::value::string(time_to_string());
+        Json::Value to_json() {
+            auto alert_json = Json::Value();
+            alert_json["alert_id"] = Json::valueToString(alert_id);
+            alert_json["identifier"] = identifier;
+            alert_json["originator_id"] = Json::valueToString(originator_id);
+            alert_json["message_type"] = message_type;
+            alert_json["scope"] = scope;
+            alert_json["status"] = status;
+            alert_json["urgency"] = urgency;
+            alert_json["severity"] = severity;
+            alert_json["cap_xml"] = cap_xml;
+            alert_json["sent_time"] = time_to_string();
             return alert_json;
         }
 
@@ -69,31 +69,31 @@ namespace cadg_soap {
          * @param alert_json    The json value representing the alert.
          * @return              The alert in Alert format, or a nullopt.
          */
-        static std::optional<Alert> from_json(web::json::value alert_json) {
+        static std::optional<Alert> from_json(Json::Value alert_json) {
             // TODO(ALL): Only require fields that the DB requires (set as NOT NULL).
-            if( alert_json.has_field("identifier")      && alert_json["identifier"].is_string() &&
-                alert_json.has_field("originator_id")   && alert_json["originator_id"].is_integer() &&
-                alert_json.has_field("message_type")    && alert_json["message_type"].is_string() &&
-                alert_json.has_field("scope")           && alert_json["scope"].is_string() &&
-                alert_json.has_field("status")          && alert_json["status"].is_string() &&
-                alert_json.has_field("urgency")         && alert_json["urgency"].is_string() &&
-                alert_json.has_field("severity")        && alert_json["severity"].is_string() &&
-                alert_json.has_field("sent_time")       && alert_json["sent_time"].is_string() &&
-                alert_json.has_field("cap_xml")         && alert_json["cap_xml"].is_string()) {
+            if( alert_json.isMember("identifier")      && alert_json["identifier"].isConvertibleTo(Json::ValueType(Json::ValueType::stringValue)) &&
+                alert_json.isMember("originator_id")   && alert_json["originator_id"].isConvertibleTo(Json::ValueType(Json::ValueType::intValue)) &&
+                alert_json.isMember("message_type")    && alert_json["message_type"].isConvertibleTo(Json::ValueType(Json::ValueType::stringValue)) &&
+                alert_json.isMember("scope")           && alert_json["scope"].isConvertibleTo(Json::ValueType(Json::ValueType::stringValue)) &&
+                alert_json.isMember("status")          && alert_json["status"].isConvertibleTo(Json::ValueType(Json::ValueType::stringValue)) &&
+                alert_json.isMember("urgency")         && alert_json["urgency"].isConvertibleTo(Json::ValueType(Json::ValueType::stringValue)) &&
+                alert_json.isMember("severity")        && alert_json["severity"].isConvertibleTo(Json::ValueType(Json::ValueType::stringValue)) &&
+                alert_json.isMember("sent_time")       && alert_json["sent_time"].isConvertibleTo(Json::ValueType(Json::ValueType::stringValue)) &&
+                alert_json.isMember("cap_xml")         && alert_json["cap_xml"].isConvertibleTo(Json::ValueType(Json::ValueType::stringValue))) {
 
                 Alert alert;
-                if(alert_json.has_field("alert_id") && alert_json["alert_id"].is_integer()) {
-                    alert.alert_id = alert_json["alert_id"].as_integer();
+                if(alert_json.isMember("alert_id") && alert_json["alert_id"].isConvertibleTo(Json::ValueType::intValue)) {
+                    alert.alert_id = alert_json["alert_id"].asInt();
                 }
-                alert.identifier = alert_json["identifier"].as_string();
-                alert.originator_id = alert_json["originator_id"].as_integer();
-                alert.message_type = alert_json["message_type"].as_string();
-                alert.scope = alert_json["scope"].as_string();
-                alert.status = alert_json["status"].as_string();
-                alert.urgency = alert_json["urgency"].as_string();
-                alert.severity = alert_json["severity"].as_string();
-                alert.sent_time = time_from_string(alert_json["sent_time"].as_string());
-                alert.cap_xml = alert_json["cap_xml"].as_string();
+                alert.identifier = alert_json["identifier"].asString();
+                alert.originator_id = alert_json["originator_id"].asInt();
+                alert.message_type = alert_json["message_type"].asString();
+                alert.scope = alert_json["scope"].asString();
+                alert.status = alert_json["status"].asString();
+                alert.urgency = alert_json["urgency"].asString();
+                alert.severity = alert_json["severity"].asString();
+                alert.sent_time = time_from_string(alert_json["sent_time"].asString());
+                alert.cap_xml = alert_json["cap_xml"].asString();
                 return alert;
             } else {
                 return std::nullopt;
@@ -101,6 +101,7 @@ namespace cadg_soap {
         }
 
         static std::optional<Alert> from_ns4__alert(_ns4__alert soap_alert) {
+            /**
             Alert alertStruct;
             alertStruct.identifier = soap_alert.identifier;
             alertStruct.originator_id = soap_alert.sender; // Not sure which would map there ??
@@ -111,6 +112,8 @@ namespace cadg_soap {
             alertStruct.severity = soap_alert.info.data()->severity;
             alertStruct.sent_time = soap_alert.sent.to_string();
             alertStruct.cap_xml = ""; // Unsure what to put here. I'm not sure how easily we will have access to the base XML string
+             **/
+             return std::nullopt;
         }
         /// Converts current sent_time to string.
         /**
@@ -157,9 +160,6 @@ namespace cadg_soap {
                 a.severity == b.severity &&
                 a.sent_time == b.sent_time;
     }
-<<<<<<< Updated upstream
 }  // namespace cadg_soap
-=======
-}
->>>>>>> Stashed changes
+
 #endif //CADG_REST_SERVER_ALERT_HPP

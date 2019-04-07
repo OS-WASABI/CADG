@@ -13,15 +13,17 @@ add_executable(soap_server
         src/gSOAPFiles/plugin/threads.cpp
         src/gSOAPFiles/soapCAPSoapHttpService.cpp
         src/gSOAPFiles/stdsoap2.cpp
+        src/nanodbc/nanodbc.cpp
         src/services/alert_dao.cpp
         src/services/logger.cpp)
 
 set(MODEL_HEADERS "src/model")
+set(NANO_HEADERS "src/nanodbc")
 set(SERVICE_HEADERS "src/services")
 set(SOAP_HEADERS "src/gSOAPFiles")
 set(SOAP_PLUGIN_HEADERS "src/gSOAPFiles/plugin")
 
-set(HEADER_PATHS ${MODEL_HEADERS} ${SERVICE_HEADERS} ${SOAP_HEADERS} ${SOAP_PLUGIN_HEADERS})
+set(HEADER_PATHS ${MODEL_HEADERS} ${NANO_HEADERS} ${SERVICE_HEADERS} ${SOAP_HEADERS} ${SOAP_PLUGIN_HEADERS})
 
 set(JSONCPP_LIBRARY -ljsoncpp)
 set(SPDLOG_LIBRARY spdlog::spdlog)

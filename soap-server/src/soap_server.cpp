@@ -77,7 +77,9 @@ int CAPSoapHttpService::postCAP(_ns1__postCAPRequestTypeDef *request,
     auto alert = request->ns4__alert;
     //Trying to convert to Alert struct to input data to Database
     auto alertStruct = Alert::from_ns4__alert(*alert);
-    __dao.AddAlert(alertStruct);
+    if (alertStruct) {
+        __dao.AddAlert(alertStruct.value());
+    }
     LoggerInterface& logger(Logger::Instance());
     logger.Log(LogLevel::INFO, alert->sender, "CAPSoapHttpService", "postCAP");
     if (alert->sender == "") {
