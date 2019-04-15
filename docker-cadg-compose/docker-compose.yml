@@ -28,6 +28,10 @@ services:
                         - DB_PORT=${DB_PORT}
                         - DB_SERVER=${DB_SERVER}
                         - DB_UID=${DB_UID}
+        cadg-soap:
+                build: ../soap-server/
+                networks:
+                        - cadgnet
         cadg-db:
                 build: ../cadg-db
                 networks:
