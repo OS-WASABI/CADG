@@ -54,16 +54,18 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++17 -DBOOST_LOG_DYN_LINK")
 # source files
 add_executable(${PROJECT_NAME}  
                                 ./src/rest_server.cpp
-                                ./src/controller/controller.cpp
                                 ./src/controller/admin_controller.cpp
-                                ./src/controller/aog_controller.cpp
                                 ./src/controller/alert_controller.cpp
+                                ./src/controller/aog_controller.cpp
+                                ./src/controller/controller.cpp
+                                ./src/controller/disseminator_controller.cpp
                                 ./src/gSoapFiles/CAP/soapC.cpp
                                 ./src/gSoapFiles/CAP/stdsoap2.cpp
                                 ./src/nanodbc/nanodbc.cpp
                                 ./src/services/admin_dao.cpp
                                 ./src/services/alert_dao.cpp
                                 ./src/services/aog_dao.cpp
+                                ./src/services/disseminator_dao.cpp
                                 ./src/services/logger.cpp
                                 ./src/soap/controller/soap_controller.cpp
                                 ./src/util/network_utils.cpp)

@@ -55,12 +55,13 @@ COMMENT = '				';
 DROP TABLE IF EXISTS `cadg`.`disseminator` ;
 
 CREATE TABLE IF NOT EXISTS `cadg`.`disseminator` (
-  `disseminator_id` INT NOT NULL,
+  `disseminator_id` INT NOT NULL AUTO_INCREMENT,
   `disseminator_name` VARCHAR(45) NULL,
   `disseminator_type` ENUM('CMSP') NULL,
   `message_format` ENUM('CMAC') NULL,
   `ip` VARCHAR(45) NULL,
   `port` INT NULL,
+  `backup_port` INT NULL,
   `status` ENUM('ACTIVE', 'DISABLED') NULL,
   PRIMARY KEY (`disseminator_id`))
 ENGINE = InnoDB;
