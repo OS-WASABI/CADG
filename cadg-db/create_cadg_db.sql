@@ -23,14 +23,6 @@ DROP SCHEMA IF EXISTS `cadg` ;
 -- Schema cadg
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `cadg` ;
--- -----------------------------------------------------
--- Schema test_db
--- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `test_db` ;
--- -----------------------------------------------------
--- Schema test_db
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `test_db` ;
 
 USE `admin_db` ;
 
@@ -63,12 +55,13 @@ COMMENT = '				';
 DROP TABLE IF EXISTS `cadg`.`disseminator` ;
 
 CREATE TABLE IF NOT EXISTS `cadg`.`disseminator` (
-  `disseminator_id` INT NOT NULL,
+  `disseminator_id` INT NOT NULL AUTO_INCREMENT,
   `disseminator_name` VARCHAR(45) NULL,
   `disseminator_type` ENUM('CMSP') NULL,
   `message_format` ENUM('CMAC') NULL,
   `ip` VARCHAR(45) NULL,
   `port` INT NULL,
+  `backup_port` INT NULL,
   `status` ENUM('ACTIVE', 'DISABLED') NULL,
   PRIMARY KEY (`disseminator_id`))
 ENGINE = InnoDB;
@@ -80,15 +73,15 @@ DROP TABLE IF EXISTS `cadg`.`alert` ;
 
 CREATE TABLE IF NOT EXISTS `cadg`.`alert` (
   `alert_id` INT NOT NULL AUTO_INCREMENT,
-  `identifier` VARCHAR(255) NULL,
-  `originator_id` INT NULL,
-  `message_type` ENUM('ACTUAL', 'EXERCISE', 'SYSTEM', 'TEST', 'DRAFT') NULL,
-  `scope` ENUM('PUBLIC', 'RESTRICTED', 'PRIVATE') NULL,
-  `status` ENUM('ACTIVE', 'CANCELED', 'EXPIRED') NULL,
-  `urgency` ENUM('IMMEDIATE', 'EXPECTED', 'FUTURE', 'PAST', 'UNKNOWN') NULL,
-  `severity` ENUM('EXTREME', 'SEVERE', 'MODERATE', 'MINOR', 'UNKNOWN') NULL,
-  `sent_time` VARCHAR(50) NULL,
-  `cap_xml` TEXT NULL,
+  `identifier` VARCHAR(255) NOT NULL,
+  `originator_id` INT NOT NULL,
+  `message_type` ENUM('ACTUAL', 'EXERCISE', 'SYSTEM', 'TEST', 'DRAFT') NOT NULL,
+  `scope` ENUM('PUBLIC', 'RESTRICTED', 'PRIVATE') NOT NULL,
+  `status` ENUM('ACTIVE', 'CANCELED', 'EXPIRED') NOT NULL,
+  `urgency` ENUM('IMMEDIATE', 'EXPECTED', 'FUTURE', 'PAST', 'UNKNOWN') NOT NULL,
+  `severity` ENUM('EXTREME', 'SEVERE', 'MODERATE', 'MINOR', 'UNKNOWN') NOT NULL,
+  `sent_time` VARCHAR(50) NOT NULL,
+  `cap_xml` TEXT NOT NULL,
   PRIMARY KEY (`alert_id`),
   CONSTRAINT `alert_originator`
     FOREIGN KEY (`originator_id`)
@@ -114,23 +107,6 @@ CREATE TABLE IF NOT EXISTS `cadg`.`originator` (
   PRIMARY KEY (`originator_id`))
 ENGINE = InnoDB;
 
-USE `test_db` ;
-
--- -----------------------------------------------------
--- Table `test_db`.`test`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `test_db`.`test` ;
-
-CREATE TABLE IF NOT EXISTS `test_db`.`test` (
-  `user_id` INT NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(120) NOT NULL,
-  `password` VARCHAR(120) NOT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE INDEX `userID_UNIQUE` (`user_id` ASC),
-  UNIQUE INDEX `username_UNIQUE` (`username` ASC))
-ENGINE = InnoDB
-COMMENT = '				';
-       
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

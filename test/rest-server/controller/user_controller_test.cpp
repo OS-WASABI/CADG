@@ -1,4 +1,4 @@
-///Tests the User Controller Class
+/// Tests the User Controller Class
 /**
  * Copyright 2018   Vaniya Agrawal, Ross Arcemont, Kristofer Hoadley,
  *                  Shawn Hulce, Michael McCulley
@@ -13,7 +13,6 @@
 #include "mock_logger.hpp"
 #include "mock_data_access.hpp"
 
-using namespace std;
 using cadg_rest::UserController;
 using cadg_rest::MockDataAccess;
 using cadg_rest::MockLogger;
@@ -38,6 +37,6 @@ TEST_F(UserControllerTest, ReturnsUserById) { }
 TEST_F(UserControllerTest, ReturnsUserByName) { }
 
 TEST_F(UserControllerTest, ParsesUserId) {
-//  std::string path = "http://localhost:8080/users/1";
-//  ASSERT_EQ(user_controller.ParseUserId(path), "1");
+    // std::string path = "http://localhost:8080/users/1";
+    // ASSERT_EQ(user_controller.ParseUserId(path), "1");
 }

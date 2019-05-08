@@ -1,4 +1,4 @@
-///Tests the Controller Class
+/// Tests the Controller Class
 /**
  * Copyright 2018   Vaniya Agrawal, Ross Arcemont, Kristofer Hoadley,
  *                  Shawn Hulce, Michael McCulley

@@ -1,12 +1,27 @@
+/// Parses existing SOAP XML documents and generates new CMAC XML documents.
+/**
+ * This class has two primary functions: Reading and writing XML documents.
+ * The read functionality parses an existing SOAP XML document and stores
+ * it in memory for future use via a CAPMessage struct. The write functionality
+ * uses this struct to build a new CMAC XML document.
+ *
+ * Copyright 2018   Vaniya Agrawal, Ross Arcemont, Kristofer Hoadley,
+ *                  Shawn Hulce, Michael McCulley
+ *
+ * @file        XMLParser.hpp
+ * @authors     Ross Arcemont
+ * @date        November, 2018
+ */
+
+#include "xml_parser.hpp"
+#include <boost/foreach.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <vector>
 #include <map>
-#include "xml_parser.hpp"
-#include <boost/foreach.hpp>
-#include <boost/property_tree/xml_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
 
 /**
  * new_message is used to store the incoming CAP message
@@ -15,7 +30,6 @@
  * to build a new CMAC message compatible for CMSP use.
  */
 typedef CAPMessage new_message;
-
 
 CAPMessage ReadXML(std::istream & is) {
     using boost::property_tree::ptree;
@@ -35,7 +49,8 @@ CAPMessage ReadXML(std::istream & is) {
     parsed_xml.urgency = pt.get<std::string>("SOAP-ENV:Envelope.SOAP-ENV:Body.alert.info.urgency");
     parsed_xml.severity = pt.get<std::string>("SOAP-ENV:Envelope.SOAP-ENV:Body.alert.info.severity");
     parsed_xml.certainty = pt.get<std::string>("SOAP-ENV:Envelope.SOAP-ENV:Body.alert.info.certainty");
-    parsed_xml.event_code.valueName = pt.get<std::string>("SOAP-ENV:Envelope.SOAP-ENV:Body.alert.info.eventCode.valueName");
+    parsed_xml.event_code.valueName =
+            pt.get<std::string>("SOAP-ENV:Envelope.SOAP-ENV:Body.alert.info.eventCode.valueName");
     parsed_xml.event_code.value = pt.get<std::string>("SOAP-ENV:Envelope.SOAP-ENV:Body.alert.info.eventCode.value");
     parsed_xml.expires = pt.get<std::string>("SOAP-ENV:Envelope.SOAP-ENV:Body.alert.info.expires");
     parsed_xml.sender_name = pt.get<std::string>("SOAP-ENV:Envelope.SOAP-ENV:Body.alert.info.senderName");
@@ -46,8 +61,8 @@ CAPMessage ReadXML(std::istream & is) {
     parsed_xml.area.area_desc = pt.get<std::string>("SOAP-ENV:Envelope.SOAP-ENV:Body.alert.info.area.areaDesc");
     parsed_xml.area.polygon = pt.get<std::string>("SOAP-ENV:Envelope.SOAP-ENV:Body.alert.info.area.polygon");
 
-    //This method is modified from the first response of the following StackOverflow post:
-    //https://stackoverflow.com/questions/40393765/accessing-multi-valued-keys-in-property-tree
+    // This method is modified from the first response of the following StackOverflow post:
+    // https://stackoverflow.com/questions/40393765/accessing-multi-valued-keys-in-property-tree
     auto &info_root = pt.get_child("SOAP-ENV:Envelope.SOAP-ENV:Body.alert.info");
     for (auto &area_child : info_root.get_child("area")) {
         if (area_child.first == "geocode") {
@@ -64,7 +79,7 @@ void WriteXML(CAPMessage new_message, std::ostream & os) {
     using boost::property_tree::ptree;
     ptree pt;
 
-    //TODO: Replace all hard-coded values with system-generated values.
+    // TODO(Ross): Replace all hard-coded values with system-generated values.
     pt.add("CMAC_Alert_Attributes.CMAC_protocol_version", 1.0);
     pt.add("CMAC_Alert_Attributes.CMAC_sending_gateway_id", "localhost");
     pt.add("CMAC_Alert_Attributes.CMAC_message_number", "mvjfo92513");
@@ -89,26 +104,34 @@ void WriteXML(CAPMessage new_message, std::ostream & os) {
     pt.add("CMAC_Alert_Attributes.CMAC_alert_info.CMAC_text_alert_message_length", new_message.description.length());
     pt.add("CMAC_Alert_Attributes.CMAC_alert_info.CMAC_text_alert_message", new_message.description);
     pt.add("CMAC_Alert_Attributes.CMAC_alert_info.CMAC_Alert_Area.CMAC_area_description", "United States");
-    pt.add("CMAC_Alert_Attributes.CMAC_alert_info.CMAC_Alert_Area.CMAC_cmas_geocode", new_message.event_code.value);
-    pt.add("CMAC_Alert_Attributes.CMAC_alert_info.CMAC_Alert_Area.CMAC_cap_geocode.valueName", new_message.event_code.valueName);
-    pt.add("CMAC_Alert_Attributes.CMAC_alert_info.CMAC_Alert_Area.CMAC_cap_geocode.value", new_message.event_code.value);
-    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.SignedInfo.CanonicalizationMethod", "Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"");
-    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.SignedInfo.SignatureMethod", "Algorithm=\"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256\"");
-    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.SignedInfo.Reference.Transform.Transform", "Algorithm=\"http://www.w3.org/2000/09/xmldsig#enveloped-signature\"");
-    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.SignedInfo.Reference.DigestMethod", "Algorithm=\"http://www.w3.org/2001/04/xmlenc#sha256\"");
+    pt.add("CMAC_Alert_Attributes.CMAC_alert_info.CMAC_Alert_Area.CMAC_cmas_geocode",
+            new_message.event_code.value);
+    pt.add("CMAC_Alert_Attributes.CMAC_alert_info.CMAC_Alert_Area.CMAC_cap_geocode.valueName",
+            new_message.event_code.valueName);
+    pt.add("CMAC_Alert_Attributes.CMAC_alert_info.CMAC_Alert_Area.CMAC_cap_geocode.value",
+            new_message.event_code.value);
+    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.SignedInfo.CanonicalizationMethod",
+            "Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"");
+    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.SignedInfo.SignatureMethod",
+            "Algorithm=\"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256\"");
+    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.SignedInfo.Reference.Transform.Transform",
+            "Algorithm=\"http://www.w3.org/2000/09/xmldsig#enveloped-signature\"");
+    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.SignedInfo.Reference.DigestMethod",
+            "Algorithm=\"http://www.w3.org/2001/04/xmlenc#sha256\"");
     pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.SignedInfo.Reference.DigestValue", "TestValue");
     pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.SignatureValue", "TestSignatureValue");
-    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.KeyInfo.X509Data.X509SubjectName", "TestX509SubjectName");
-    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.KeyInfo.X509Data.X509Certificate", "TestX509Certificate");
+    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.KeyInfo.X509Data.X509SubjectName",
+            "TestX509SubjectName");
+    pt.add("CMAC_Alert_Attributes.CMAC_Digital_Signature.Signature.KeyInfo.X509Data.X509Certificate",
+            "TestX509Certificate");
 
     write_xml(os, pt);
 }
 
-//int main() {
+// int main() {
 //    std::ifstream input("soap_message_test.xml");
 //    CAPMessage new_message = ReadXML(input);
-//
 //    std::ofstream output("test_cmac_message.xml");
 //    WriteXML(new_message, output);
 //    return 0;
-//}
+// }

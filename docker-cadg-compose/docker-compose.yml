@@ -4,10 +4,14 @@ services:
                 build: ../docker-cadg-apache
                 ports:
                         - "8080:80"
+                        - "8443:443"
                 depends_on:
                         - "cadg-rest"
+                        - "cadg-ui"
                 networks:
                         - cadgnet
+                volumes:
+                        - "react-app:/usr/local/apache2/htdocs"
         cadg-rest:
                 build: ../rest-server/
                 tty: true
@@ -20,13 +24,24 @@ services:
                         - DB_ADMIN_TABLE=${DB_ADMIN_TABLE}
                         - DB_ALERT_TABLE=${DB_ALERT_TABLE}
                         - DB_CADG_NAME=${DB_CADG_NAME}
+                        - DB_DISSEMINATOR_TABLE=${DB_DISSEMINATOR_TABLE}
                         - DB_PASSWORD=${DB_PASSWORD}
                         - DB_PORT=${DB_PORT}
                         - DB_SERVER=${DB_SERVER}
                         - DB_UID=${DB_UID}
+        cadg-soap:
+                build: ../soap-server/
+                networks:
+                        - cadgnet
         cadg-db:
                 build: ../cadg-db
                 networks:
                         - cadgnet
+        cadg-ui:
+                build: ../cadg-ui
+                volumes:
+                        - "react-app:/cadg-ui/build"
 networks:
         cadgnet:
+volumes:
+        react-app:

@@ -1,4 +1,4 @@
-///Tests the Alert Struct
+/// Tests the Alert Struct
 /**
  * Copyright 2018   Vaniya Agrawal, Ross Arcemont, Kristofer Hoadley,
  *                  Shawn Hulce, Michael McCulley
@@ -12,13 +12,13 @@
 #include <iostream>
 #include <sstream>
 #include <ctime>
+#include <string>
 #include "alert.hpp"
 
 using cadg_rest::Alert;
 
 class AlertTest : public ::testing::Test {
-
-public:
+ public:
     Alert alert;
     std::time_t time = std::time(0);
     AlertTest() {
@@ -45,7 +45,7 @@ TEST_F(AlertTest, TimeConvertsToAndFromString) {
 TEST_F(AlertTest, ConvertsToAndFromJSON) {
     web::json::value alert_json = alert.to_json();
     std::optional<Alert> new_alert = Alert::from_json(alert_json);
-//    ASSERT_EQ(new_alert->sent_time, time);
+    // ASSERT_EQ(new_alert->sent_time, time);
     ASSERT_EQ(new_alert->alert_id, 0);
     ASSERT_EQ(new_alert->identifier, "First Alert Ever");
     ASSERT_EQ(new_alert->originator_id, 001);
@@ -57,7 +57,7 @@ TEST_F(AlertTest, ConvertsToAndFromJSON) {
     ASSERT_EQ(new_alert->cap_xml, "CAP MESSAGE TEXT");
 }
 
-TEST_F(AlertTest, ComparesToOtherAlerts){
+TEST_F(AlertTest, ComparesToOtherAlerts) {
     Alert identical_alert;
     identical_alert.sent_time = time;
     identical_alert.alert_id = 0;
@@ -84,6 +84,4 @@ TEST_F(AlertTest, ComparesToOtherAlerts){
     ASSERT_TRUE(alert == alert);
     ASSERT_TRUE(alert == identical_alert);
     ASSERT_FALSE(alert == non_identical_alert);
-
 }
-

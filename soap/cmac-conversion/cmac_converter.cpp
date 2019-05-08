@@ -1,41 +1,46 @@
+/// Converts any syntactically correct SOAP CAP document into a CMAC XML document.
+/**
+ *
+ * Copyright 2018   Vaniya Agrawal, Ross Arcemont, Kristofer Hoadley,
+ *                  Shawn Hulce, Michael McCulley
+ *
+ * @file    cmac_converter.cpp
+ * @authors Ross Arcemont
+ * @date    January, 2019
+ */
 #include <iostream>
 #include <string>
 #include <ctime>
 #include "cmac_converter.hpp"
 #include "../pugixml-1.9/src/pugixml.hpp"
-#include "../pugixml-1.9/src/pugixml.cpp"
 
-///Converts any syntactically correct SOAP CAP document into a CMAC XML document.
-/**
- * Converts syntactically correct SOAP CAP documents into CMAC XML documents.
- * Pulls the SOAP XML document content in the soap_filename argument into memory
- * for content needed in the upcoming CMAC XML document structure. The CMAC
- * document structure is then created and filled with content from the
- * SOAP XML document before saving to the filepath and filename in the
- * cmac_filename argument.
- * @param soap_filename     Filepath and filename of the SOAP document to be converted
- * @param cmac_filename     Filepath and filename of the CMAC document to be saved
- */
 void CMAC::convert(std::string soap_filename, std::string cmac_filename) {
-    //Obtaining the current date-time for later use.
+    // Obtaining the current date-time for later use.
     std::time_t time = std::time(0);
     std::tm* current_date_time = std::localtime(&time);
-    std::string date_time_str = std::to_string((current_date_time->tm_year + 1900)) + '-' + std::to_string((current_date_time->tm_mon + 1)) + '-' + std::to_string(current_date_time->tm_mday) + 'T' + std::to_string(current_date_time->tm_hour) + ':' + std::to_string(current_date_time->tm_min) + ':' + std::to_string(current_date_time->tm_sec) + 'Z';
+    std::string date_time_str = std::to_string((current_date_time->tm_year + 1900)) +
+            '-' + std::to_string((current_date_time->tm_mon + 1)) +
+            '-' + std::to_string(current_date_time->tm_mday) +
+            'T' + std::to_string(current_date_time->tm_hour) +
+            ':' + std::to_string(current_date_time->tm_min) +
+            ':' + std::to_string(current_date_time->tm_sec) + 'Z';
 
-    //Pulling the SOAP document into memory.
+    // Pulling the SOAP document into memory.
     pugi::xml_document soap_doc;
     pugi::xml_parse_result result = soap_doc.load_file(soap_filename.c_str());
     pugi::xml_node cap_message = soap_doc.first_child().first_child().first_child();
 
-    //Creating the CMAC document and declaring its root node.
+    // Creating the CMAC document and declaring its root node.
     pugi::xml_document cmac_doc;
     auto declaration_node = cmac_doc.append_child(pugi::node_declaration);
     declaration_node.append_attribute("version") = "1.0";
     auto root_node = cmac_doc.append_child("CMAC_Alert_Attributes");
 
-    //Creating the node structure for the entire CMAC document.
-    //All node variable names match the corresponding CMAC
-    //structure as closely as possible.
+    /** 
+     * Creating the node structure for the entire CMAC document.
+     * All node variable names match the corresponding CMAC
+     * structure as closely as possible.
+     */
     auto cmac_protocol_version = root_node.append_child("CMAC_protocol_version");
     auto cmac_sending_gateway_id = root_node.append_child("CMAC_sending_gateway_id");
     auto cmac_message_number = root_node.append_child("CMAC_message_number");
@@ -69,12 +74,13 @@ void CMAC::convert(std::string soap_filename, std::string cmac_filename) {
     auto cmac_polygon = cmac_alert_area.append_child("CMAC_polygon");
     auto cmac_cmas_geocode = cmac_alert_area.append_child("CMAC_cmas_geocode");
 
-    //Creating geocode nodes and filling with content
-    for (pugi::xml_node geocode = cap_message.child("info").child("area").first_child(); geocode ; geocode = geocode.next_sibling()) {
+    // Creating geocode nodes and filling with content
+    for (pugi::xml_node geocode = cap_message.child("info").child("area").first_child();
+                geocode; geocode = geocode.next_sibling()) {
         std::string node_name = geocode.name();
-        //std::cout << node_name << ' ';
-        if(node_name.compare("geocode") == 0) {
-            //std::cout << " made it ";
+        // std::cout << node_name << ' ';
+        if (node_name.compare("geocode") == 0) {
+            // std::cout << " made it ";
             auto cmac_cap_geocode = cmac_alert_area.append_child("CMAC_cap_geocode");
             auto value_name = cmac_cap_geocode.append_child("valueName");
             auto value = cmac_cap_geocode.append_child("value");
@@ -110,11 +116,14 @@ void CMAC::convert(std::string soap_filename, std::string cmac_filename) {
     auto x509_subject_name = x509_data.append_child("X509SubjectName");
     auto x509_certificate = x509_data.append_child("X509Certificate");
 
-    //Setting values for all CMAC document nodes.
+    // Setting values for all CMAC document nodes.
     cmac_protocol_version.text().set("1.0");
-    cmac_sending_gateway_id.text().set(cap_message.child("sender").text().get()); //TODO: Determine how to get gateway IP?
-    cmac_message_number.text().set(cap_message.child("identifier").text().get()); //TODO: Determining how to identify CMSP-initiated value, when applicable.
-    cmac_special_handling.text().set(cap_message.child("scope").text().get()); //TODO: Ensure correctness.
+    // TODO(Ross): Determine how to get gateway IP?
+    cmac_sending_gateway_id.text().set(cap_message.child("sender").text().get());
+    // TODO(Ross): Determining how to identify CMSP-initiated value, when applicable.
+    cmac_message_number.text().set(cap_message.child("identifier").text().get());
+    // TODO(Ross): Ensure correctness.
+    cmac_special_handling.text().set(cap_message.child("scope").text().get());
     cmac_sender.text().set(cap_message.child("sender").text().get());
     cmac_sent_date_time.text().set(date_time_str.c_str());
     cmac_status.text().set(cap_message.child("status").text().get());
@@ -125,21 +134,19 @@ void CMAC::convert(std::string soap_filename, std::string cmac_filename) {
         cmac_note.text().set(cap_message.child("note").text().get());
     }
 
-    cmac_cap_alert_uri.text().set("Temporary value"); //TODO: Determine how to obtain from the gateway.
+    cmac_cap_alert_uri.text().set("Temporary value");  // TODO(Ross): Determine how to obtain from the gateway.
     cmac_cap_identifier.text().set(cap_message.child("identifier").text().get());
     cmac_cap_sent_date_time.text().set(cap_message.child("sent").text().get());
 
     cmac_category.text().set(cap_message.child("info").child("category").text().get());
 
-    //TODO: Verify if this if-else is even necessary.
+    // TODO(Ross): Verify if this if-else is even necessary.
     std::string special_handling = cmac_special_handling.text().get();
     if (special_handling.compare("Presidential") == 0) {
         cmac_event_code.text().set("EAN");
-    }
-    else if (special_handling.compare("Child Abduction") == 0) {
+    } else if (special_handling.compare("Child Abduction") == 0) {
         cmac_event_code.text().set("CAE");
-    }
-    else if (special_handling.compare("Required Monthly Test") == 0) {
+    } else if (special_handling.compare("Required Monthly Test") == 0) {
         cmac_event_code.text().set("RMT");
     }
 
@@ -174,19 +181,19 @@ void CMAC::convert(std::string soap_filename, std::string cmac_filename) {
     digest_method.append_attribute("Algorithm");
     digest_method.attribute("Algorithm") = "http://www.w3.org/2001/04/xmlenc#sha256";
 
-    //Assigning temporary values for currently unknown information.
+    // Assigning temporary values for currently unknown information.
     digest_value.text().set("Temporary value");
     signature_value.text().set("Temporary value");
     x509_subject_name.text().set("Temporary value");
     x509_certificate.text().set("Temporary value");
 
 
-    //Saving CMAC document.
+    // Saving CMAC document.
     bool saved = cmac_doc.save_file(cmac_filename.c_str());
 }
 
-//int main() {
+// int main() {
 //    CMAC::convert("soap_message_test.xml", "test.xml");
-//}
+// }
 
 

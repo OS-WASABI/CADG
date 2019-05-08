@@ -44,8 +44,8 @@ make
 ## Credits
 Dev | Name
 -------|------
-![Mike McCulley](https://avatars2.githubusercontent.com/u/37458102?s=64&v=4) | [Mike McCulley](https://github.com/ASUMike)
-![Kristofer Hoadley](https://avatars2.githubusercontent.com/u/22945482?s=64&v=4) | [Kristofer Hoadley](https://github.com/kchoadley)
-![Shawn Hulce](https://avatars3.githubusercontent.com/u/26700431?s=64&v=4) | [Shawn Hulce](https://github.com/SHulce)
-![Ross Arcemont](https://avatars0.githubusercontent.com/u/23668393?s=64&v=4) | [Ross Arcemont](https://github.com/SilverStar07)
-![Vaniya Agrawal](https://avatars0.githubusercontent.com/u/23622647?s=64&v=4) | [Vaniya Agrawal](https://github.com/vsagrawal0)
+<img src="./img/vaniya.png" width="200" height="200"> | [Vaniya Agrawal](https://github.com/vsagrawal0)
+<img src="./img/ross.png" width="200" height="200"> | [Ross Arcemont](https://github.com/SilverStar07)
+<img src="./img/kris.png" width="200" height="200"> | [Kristofer Hoadley](https://github.com/kchoadley)
+<img src="./img/shawn.jpg" width="200" height="200"> | [Shawn Hulce](https://github.com/SHulce)
+<img src="./img/mike.png" width="200" height="200"> | [Mike McCulley](https://github.com/ASUMike)
