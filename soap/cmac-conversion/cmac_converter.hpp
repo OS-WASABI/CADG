@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "../pugixml-1.9/src/pugixml.hpp"
+#include "../../rest-server/src/model/cmac/cmac_alert.hpp"
 
 #ifndef CADG_REST_SERVER_CMAC_CONVERTER_H
 #define CADG_REST_SERVER_CMAC_CONVERTER_H
@@ -22,6 +23,6 @@ public:
      * @param soap_filename     Filepath and filename of the SOAP document to be converted
      * @param cmac_filename     Filepath and filename of the CMAC document to be saved
      */
-    static void convert(std::string soap_filename, std::string cmac_filename);
+    static void convert(CADG_REST_SERVER_CMAC_ALERT_HPP::cmac::CMAC_alert alert_content, std::string cmac_filename);
 };
 #endif //CADG_REST_SERVER_CMAC_CONVERTER_H
